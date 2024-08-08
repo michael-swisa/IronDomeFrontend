@@ -1,11 +1,14 @@
 let missile;
 
+// Loding missiles.json
 const lodMissilesJson = async () => {
   const response = await fetch("missiles.json");
   const result = await response.json();
   missile = result;
 };
 
+
+// Inserting missile into html option one and send missile to server
 const AddMissile = () => {
   if (missile.length > 0) {
     const missilesDiv = document.getElementById("missiles-div");
@@ -28,6 +31,8 @@ const AddMissile = () => {
   }
 };
 
+
+// Inserting missile into html option two and send missile to server
 const addmissile = () => {
   const missilesdiv = document.getElementById("missiles-div");
   const p = document.createElement("p");
@@ -39,8 +44,12 @@ const addmissile = () => {
   }
 };
 
+
+// conecstion to server
 const socket = new WebSocket("ws://localhost:3108/MissileHandler");
 
+
+// sending missile to server
 const publishMessage = (miss) => {
   socket.send(JSON.stringify(miss));
 };
