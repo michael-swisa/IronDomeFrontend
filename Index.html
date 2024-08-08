@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Attak Server</title>
-</head>
-<body>
-    <h1>Attak Server</h1>
-</body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <script src="script.js"></script>
+  <body>
+    <h1 class="main-headline">Attak Server</h1>
+    <div id="missiles-div" class="missiles"></div>
+    <br>
+    <button onclick="addmissile()">Add</button>
+    <br>
+    <button onclick="lodMissilesJson()">Load</button>
+    <br>
+    <button onclick="publishMessage()">Publish</button>
+
+  </body>
 </html>
