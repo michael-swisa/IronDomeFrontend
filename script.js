@@ -12,23 +12,22 @@ const insertMissileToDispatch = () => {
   for (let i = 0; i < misseiles.length; i++) {
     let missilesDiv = document.getElementById("missiles-to-send");
     let p = document.createElement("p");
-    p.innerText = `Missile name: ${misseiles[i]["Name"]}, time: ${misseiles[i]["Time"]}`;
+    p.innerText = `Missile name: ${misseiles[i]["Name"]}(${misseiles[i]["Id"]}), Timer:`;
     p.id = misseiles[i]["Id"];
+    let timer = document.createElement("span");
+    timer.id = "timer";
+    timer.innerHTML = ` ${misseiles[i]["Time"]}`;
+    p.appendChild(timer);
+
     missilesDiv.appendChild(p);
   }
 };
 
-const setTime = (time) => {
-  let count = time;
-  setInterval(() => {
-    count--;
-  }, 1000);
-};
 
 // Inserting missile into html and send missile to server
 const AddMissiles = async () => {
   await LodMissilesJson();
-  insertMissileToDispatch()
+  insertMissileToDispatch();
   while (misseiles.length > 0) {
     let missilesDiv = document.getElementById("missiles-in-air");
     let p = document.createElement("p");
@@ -39,7 +38,7 @@ const AddMissiles = async () => {
       removeMissile("missiles-to-send", OneMissiles["Id"]);
       publishMessage(OneMissiles);
       p.id = OneMissiles["Id"];
-      p.innerText += `Missile name: ${OneMissiles["Name"]}.`;
+      p.innerText += `Missile name: ${OneMissiles["Name"]}(${OneMissiles["Id"]}).`;
       missilesDiv.appendChild(p);
     }
   }
@@ -101,7 +100,7 @@ socket.onmessage = (event) => {
   printToScreenResult(result);
 };
 
-
+// Remove missile in div by id
 const removeMissile = (nameDiv, id) => {
   const missileOnAir = document.getElementById(nameDiv).children;
   for (let i = 0; i < missileOnAir.length; i++) {
@@ -111,19 +110,18 @@ const removeMissile = (nameDiv, id) => {
   }
 };
 
-
 // Print to the screen the result of the interception
 const printToScreenResult = (result) => {
   if (result.intercepted) {
     const missilesDivs = document.getElementById("intercepted-missiles");
     const p = document.createElement("p");
-    p.innerText = `Missile name: ${result.Missile}, intercepted: ${result.intercepted} by: ${result.by}`;
+    p.innerText = `Missile name: ${result.Missile}(${result.Id}), intercepted by: ${result.by}, remaining: ${result.remaining}`;
     p.id = result.Id;
     missilesDivs.appendChild(p);
   } else {
     const missilesDivs = document.getElementById("Fallen-missiles");
     const p = document.createElement("p");
-    p.innerText = `Missile name: ${result.Missile}, intercepted: ${result.intercepted} by: ${result.by}`;
+    p.innerText = `Missile name: ${result.Missile}(${result.Id}), intercepted by: ${result.by}, remaining: ${result.remaining}, Damage: ${result.Damage}`;
     p.id = result.Id;
     missilesDivs.appendChild(p);
   }
