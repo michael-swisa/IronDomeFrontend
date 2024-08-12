@@ -1,21 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Attak Server</title>
+    <title>שרת התקפה</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <script src="script.js"></script>
   <body>
-    <h1 class="main-headline">Attak Server</h1>
-    <div id="missiles-div" class="missiles"></div>
-    <br>
-    <button onclick="addmissile()">Add</button>
-    <br>
-    <button onclick="lodMissilesJson()">Load</button>
-    <br>
-    <button onclick="publishMessage()">Publish</button>
-
+    <h1 class="main-headline">שרת התקפה</h1>
+    <div class="container">
+      <div class="missile-box">
+        <h2>טילים לשיגור</h2>
+        <div id="missiles-to-send" class="missiles"></div>
+      </div>
+      <div class="missile-box">
+        <h2>טילים באוויר</h2>
+        <div id="missiles-in-air" class="missiles"></div>
+      </div>
+      <div class="missile-box">
+        <h2>טילים שיורטו</h2>
+        <div id="intercepted-missiles" class="missiles"></div>
+      </div>
+      <div class="missile-box">
+        <h2>טילים שנפלו</h2>
+        <div id="Fallen-missiles" class="missiles"></div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+      AddMissiles();
+    </script>
   </body>
 </html>
