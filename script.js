@@ -1,10 +1,13 @@
 let misseiles;
+// let SoundSend = new Audio(`/Sound/Send.mp3`);
+// let SoundFallen = new Audio("/Sound/Fallen.mp3");
+// let Soundintercepted = new Audio("/Sound/intercepted.mp3");
 
 // Loding missiles.json
 const LodMissilesJson = async () => {
   const response = await fetch("missiles.json");
-  const miss = await response.json();
-  misseiles = miss;
+  const allMisiles = await response.json();
+  misseiles = allMisiles;
 };
 
 // inserting missile into html
@@ -12,34 +15,40 @@ const insertMissileToDispatch = () => {
   for (let i = 0; i < misseiles.length; i++) {
     let missilesDiv = document.getElementById("missiles-to-send");
     let p = document.createElement("p");
-    p.innerText = `Missile name: ${misseiles[i]["Name"]}(${misseiles[i]["Id"]}), Timer:`;
-    p.id = misseiles[i]["Id"];
+    const uniqueId = crypto.randomUUID();
+    p.innerText = `Missile name: ${misseiles[i]["Name"]}(${uniqueId}), Timer:`;
+    p.id = uniqueId;
+    misseiles[i]["Id"] = uniqueId;
     let timer = document.createElement("span");
     timer.id = "timer";
     timer.innerHTML = ` ${misseiles[i]["Time"]}`;
     p.appendChild(timer);
-
     missilesDiv.appendChild(p);
   }
 };
 
+const Timer = (id, time) => {
+
+}
 
 // Inserting missile into html and send missile to server
 const AddMissiles = async () => {
   await LodMissilesJson();
-  insertMissileToDispatch();
+  await insertMissileToDispatch();
   while (misseiles.length > 0) {
     let missilesDiv = document.getElementById("missiles-in-air");
     let p = document.createElement("p");
-    const OneMissiles = misseiles.shift();
-    if (OneMissiles) {
-      let AmountTime = OneMissiles.Time;
+    const OneMissile = misseiles.shift();  
+    if (OneMissile) {
+      console.log(JSON.stringify(OneMissile));
+      let AmountTime = OneMissile.Time;
       await new Promise((resolve) => setTimeout(resolve, AmountTime * 1000));
-      removeMissile("missiles-to-send", OneMissiles["Id"]);
-      publishMessage(OneMissiles);
-      p.id = OneMissiles["Id"];
-      p.innerText += `Missile name: ${OneMissiles["Name"]}(${OneMissiles["Id"]}).`;
+      removeMissile("missiles-to-send", OneMissile["Id"]);
+      publishMessage(OneMissile);
+      p.id = OneMissile["Id"];
+      p.innerText += `Missile name: ${OneMissile["Name"]}(${OneMissile["Id"]}).`;
       missilesDiv.appendChild(p);
+      // SoundSend.play();
     }
   }
 };
@@ -88,8 +97,8 @@ const AddMissiles = async () => {
 const socket = new WebSocket("ws://localhost:3108/MissileHandler");
 
 // sending missile to server
-const publishMessage = (miss) => {
-  socket.send(JSON.stringify(miss));
+const publishMessage = (missile) => {
+  socket.send(JSON.stringify(missile));
 };
 
 // Handle messages from the backend
@@ -118,11 +127,13 @@ const printToScreenResult = (result) => {
     p.innerText = `Missile name: ${result.Missile}(${result.Id}), intercepted by: ${result.by}, remaining: ${result.remaining}`;
     p.id = result.Id;
     missilesDivs.appendChild(p);
+    // Soundintercepted.play();
   } else {
     const missilesDivs = document.getElementById("Fallen-missiles");
     const p = document.createElement("p");
     p.innerText = `Missile name: ${result.Missile}(${result.Id}), intercepted by: ${result.by}, remaining: ${result.remaining}, Damage: ${result.Damage}`;
     p.id = result.Id;
     missilesDivs.appendChild(p);
+    // SoundFallen.play();
   }
 };
